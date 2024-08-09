@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import Login from './components/Login';
+import Inventario from './components/Inventario';
+import Reportes from './components/Reportes';
 
-function App() {
+const App = () => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [usuario, setUsuario] = useState('');
+  const [currentPage, setCurrentPage] = useState('inventario');
+
+  const handleLogin = (username) => {
+    setLoggedIn(true);
+    setUsuario(username);
+  };
+
+  if (!loggedIn) {
+    return <Login onLogin={handleLogin} />;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <nav>
+        <button onClick={() => setCurrentPage('inventario')}>Inventario</button>
+        <button onClick={() => setCurrentPage('reportes')}>Reportes</button>
+      </nav>
+      <h1>Farmacia Mil Remedios - Gestión de Inventarios</h1>
+      <p>Bienvenido, {usuario}</p>
+      {currentPage === 'inventario' ? <Inventario /> : <Reportes />}
     </div>
   );
-}
+};
 
 export default App;

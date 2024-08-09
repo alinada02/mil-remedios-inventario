@@ -1,0 +1,26 @@
+/* Estilo básico para las tarjetas */
+.card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    margin-bottom: 20px;
+  }
+  
+  .card-header {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  .card-body {
+    font-size: 1rem;
+  }
+  
+  .card-footer {
+    font-size: 0.875rem;
+    text-align: right;
+    margin-top: 10px;
+  }
+  
