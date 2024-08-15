@@ -1,16 +1,33 @@
 // src/components/ui/card.js
 import React from 'react';
-import './card.css'; // Asegúrate de crear el archivo card.css si lo necesitas
+import './card.css'; // Importa los estilos para la tarjeta
 
-const Card = ({ title, children }) => {
-  return (
-    <div className="card">
-      {title && <h2 className="card-title">{title}</h2>}
-      <div className="card-content">
-        {children}
-      </div>
-    </div>
-  );
-};
+// Componente de tarjeta
+const Card = ({ children, className, ...props }) => (
+  <div className={`card ${className}`} {...props}>
+    {children}
+  </div>
+);
 
-export default Card;
+// Encabezado de la tarjeta
+const CardHeader = ({ children, className, ...props }) => (
+  <div className={`card-header ${className}`} {...props}>
+    {children}
+  </div>
+);
+
+// Título de la tarjeta
+const CardTitle = ({ children, className, ...props }) => (
+  <div className={`card-title ${className}`} {...props}>
+    {children}
+  </div>
+);
+
+// Contenido de la tarjeta
+const CardContent = ({ children, className, ...props }) => (
+  <div className={`card-content ${className}`} {...props}>
+    {children}
+  </div>
+);
+
+export { Card, CardHeader, CardTitle, CardContent };

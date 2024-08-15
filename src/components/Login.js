@@ -1,58 +1,45 @@
 import React, { useState } from 'react';
-import { Button } from 'components/ui/button';
-import { Input } from 'components/ui/input';
-import { Card, CardHeader, CardTitle, CardContent } from 'components/ui/card';
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = () => {
-    // Aquí iría la lógica de autenticación real
-    // Por ahora, haremos una validación simple
-    if (username === 'admin' && password === 'password') {
-      setError('');
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (username === 'admin' && password === 'hola.123') {
       onLogin(username);
     } else {
-      setError('Usuario o contraseña incorrectos');
+      setError('Credenciales inválidas');
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-2xl text-center">Farmacia Mil Remedios</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }} className="space-y-4">
-            <div>
-              <Input
-                type="text"
-                placeholder="Usuario"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full"
-              />
-            </div>
-            <div>
-              <Input
-                type="password"
-                placeholder="Contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full"
-              />
-            </div>
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            <Button type="submit" className="w-full">
-              Iniciar Sesión
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+    <form className="login-form" onSubmit={handleSubmit}>
+      <h2>Iniciar Sesión</h2>
+      <div className="form-group">
+        <label htmlFor="username">Usuario:</label>
+        <input
+          type="text"
+          id="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="password">Contraseña:</label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </div>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <button className="button" type="submit">Iniciar Sesión</button>
+    </form>
   );
 };
 
