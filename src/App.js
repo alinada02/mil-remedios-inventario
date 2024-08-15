@@ -23,7 +23,7 @@ const App = () => {
     <Router>
       <div className="container">
         <header className="header">
-          <h1>Farmacia Mil Remedios - Gestión de Inventarios</h1>
+          <h1>Farmacia Mil Remedios -  Inventarios</h1>
         </header>
         {loggedIn && (
           <nav className="nav">
