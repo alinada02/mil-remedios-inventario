@@ -1,79 +1,141 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Quagga from 'quagga'; // Importando quaggaJS
 
 const Inventario = () => {
-  const [items, setItems] = useState([]);
-  const [nuevoItem, setNuevoItem] = useState({ nombre: '', cantidad: '', precio: '' });
-  const [error, setError] = useState('');
+    const [items, setItems] = useState([]);
+    const [codigoReferencia, setCodigoReferencia] = useState('');
+    const [nombre, setNombre] = useState('');
+    const [precio, setPrecio] = useState('');
+    const [cantidad, setCantidad] = useState('');
+    const [isScanning, setIsScanning] = useState(false);
 
-  const agregarItem = (e) => {
-    e.preventDefault();
+    // Función para agregar un artículo al inventario
+    const agregarItem = () => {
+        if (!nombre || !precio || !cantidad) {
+            alert("Por favor, completa todos los campos obligatorios antes de agregar el artículo.");
+            return;
+        }
 
-    // Validaciones
-    if (nuevoItem.nombre.trim() === '') {
-      setError('Debe ingresar el nombre del artículo.');
-      return;
-    }
+        const nuevoItem = {
+            codigoReferencia,
+            nombre,
+            precio,
+            cantidad
+        };
 
-    if (nuevoItem.cantidad === '' || nuevoItem.cantidad <= 0) {
-      setError('Debe ingresar una cantidad mayor que cero.');
-      return;
-    }
+        setItems([...items, nuevoItem]);
+        setCodigoReferencia('');
+        setNombre('');
+        setPrecio('');
+        setCantidad('');
+    };
 
-    if (nuevoItem.precio === '') {
-      setError('Debe ingresar el precio del artículo.');
-      return;
-    }
+    // Función para finalizar el inventario y enviar los datos a la sección de reportes
+    const finalizarInventario = () => {
+        // Aquí podrías agregar lógica para enviar los datos al backend o guardarlos localmente
+        alert("Inventario finalizado y enviado a reportes.");
+        setItems([]); // Limpiar la lista de artículos después de finalizar el inventario
+    };
 
-    if (nuevoItem.precio < 0) {
-      setError('El precio debe ser un valor positivo.');
-      return;
-    }
+    // Función para alternar el estado del escaneo
+    const toggleScanner = () => {
+        if (isScanning) {
+            Quagga.stop(); // Detener el escaneo
+            setIsScanning(false);
+        } else {
+            iniciarEscaneo();
+            setIsScanning(true);
+        }
+    };
 
-    // Agregar el nuevo item si todas las validaciones pasan
-    setItems([...items, { ...nuevoItem, id: Date.now() }]);
-    setNuevoItem({ nombre: '', cantidad: '', precio: '' });
-    setError(''); // Limpiar errores
-  };
+    // Función para iniciar el escaneo de códigos de barras
+    const iniciarEscaneo = () => {
+        Quagga.init({
+            inputStream: {
+                type: "LiveStream",
+                constraints: {
+                    width: 640,
+                    height: 480,
+                    facingMode: "environment" // Utilizar la cámara trasera
+                }
+            },
+            decoder: {
+                readers: ["code_128_reader"] // Seleccionando el formato de los códigos de barras
+            }
+        }, (err) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            console.log("Iniciado correctamente");
+            Quagga.start();
+        });
 
-  const eliminarItem = (id) => {
-    setItems(items.filter(item => item.id !== id));
-  };
+        Quagga.onDetected((data) => {
+            const code = data.codeResult.code;
+            console.log(`Código detectado: ${code}`);
 
-  return (
-    <div>
-      <h2>Inventario</h2>
-      {error && <p className="error-message">{error}</p>}
-      <form onSubmit={agregarItem}>
-        <input
-          type="text"
-          placeholder="Nombre del producto"
-          value={nuevoItem.nombre}
-          onChange={(e) => setNuevoItem({ ...nuevoItem, nombre: e.target.value })}
-        />
-        <input
-          type="number"
-          placeholder="Cantidad"
-          value={nuevoItem.cantidad}
-          onChange={(e) => setNuevoItem({ ...nuevoItem, cantidad: parseInt(e.target.value, 10) })}
-        />
-        <input
-          type="number"
-          placeholder="Precio"
-          value={nuevoItem.precio}
-          onChange={(e) => setNuevoItem({ ...nuevoItem, precio: parseFloat(e.target.value) })}
-        />
-        <button type="submit">Agregar Item</button>
-      </form>
-      <ul>
-        {items.map(item => (
-          <li key={item.id}>
-            {item.nombre} - Cantidad: {item.cantidad} - Precio: ${item.precio.toFixed(2)}
-            <button onClick={() => eliminarItem(item.id)}>Eliminar</button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+            // Aquí se podría realizar la búsqueda del artículo en la base de datos.
+            setCodigoReferencia(code);
+
+            // Detener el escaneo automáticamente después de detectar un código
+            Quagga.stop();
+            setIsScanning(false);
+        });
+    };
+
+    return (
+        <div>
+            <h2>Inventario</h2>
+            <button onClick={toggleScanner}>
+                {isScanning ? 'Detener Escáner' : 'Iniciar Escáner'}
+            </button>
+            <div>
+                <label>Código de Referencia:</label>
+                <input
+                    type="text"
+                    value={codigoReferencia}
+                    onChange={(e) => setCodigoReferencia(e.target.value)}
+                />
+            </div>
+            <div>
+                <label>Nombre:</label>
+                <input
+                    type="text"
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                    required
+                />
+            </div>
+            <div>
+                <label>Precio:</label>
+                <input
+                    type="text"
+                    value={precio}
+                    onChange={(e) => setPrecio(e.target.value)}
+                    required
+                />
+            </div>
+            <div>
+                <label>Cantidad:</label>
+                <input
+                    type="text"
+                    value={cantidad}
+                    onChange={(e) => setCantidad(e.target.value)}
+                    required
+                />
+            </div>
+            <button onClick={agregarItem}>Agregar Artículo</button>
+            <button onClick={finalizarInventario}>Finalizar Inventario</button>
+            <ul>
+                {items.map((item, index) => (
+                    <li key={index}>
+                        {item.codigoReferencia} - {item.nombre} - {item.precio} - {item.cantidad}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
 };
 
 export default Inventario;

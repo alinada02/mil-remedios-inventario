@@ -1,53 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
-const Inventario = () => {
-  const [items, setItems] = useState([]);
-  const [nuevoItem, setNuevoItem] = useState({ nombre: '', cantidad: '', precio: '' });
+const Reportes = ({ inventario }) => {
+  const exportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(inventario);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Inventario');
 
-  const agregarItem = (e) => {
-    e.preventDefault();
-    setItems([...items, { ...nuevoItem, id: Date.now() }]);
-    setNuevoItem({ nombre: '', cantidad: '', precio: '' });
-  };
-
-  const eliminarItem = (id) => {
-    setItems(items.filter(item => item.id !== id));
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(data, 'inventario.xlsx');
   };
 
   return (
     <div>
-      <h2>Inventario</h2>
-      <form onSubmit={agregarItem}>
-        <input
-          type="text"
-          placeholder="Nombre del producto"
-          value={nuevoItem.nombre}
-          onChange={(e) => setNuevoItem({ ...nuevoItem, nombre: e.target.value })}
-        />
-        <input
-          type="number"
-          placeholder="Cantidad"
-          value={nuevoItem.cantidad}
-          onChange={(e) => setNuevoItem({ ...nuevoItem, cantidad: e.target.value })}
-        />
-        <input
-          type="number"
-          placeholder="Precio"
-          value={nuevoItem.precio}
-          onChange={(e) => setNuevoItem({ ...nuevoItem, precio: e.target.value })}
-        />
-        <button type="submit">Agregar Item</button>
-      </form>
-      <ul>
-        {items.map(item => (
-          <li key={item.id}>
-            {item.nombre} - Cantidad: {item.cantidad} - Precio: ${item.precio}
-            <button onClick={() => eliminarItem(item.id)}>Eliminar</button>
-          </li>
-        ))}
-      </ul>
+      <h2>Historial de Inventarios</h2>
+      <button onClick={exportToExcel}>Descargar Inventario en Excel</button>
+      {/* Aquí puedes agregar el código existente para mostrar el historial de inventarios */}
     </div>
   );
 };
 
-export default Inventario;
+export default Reportes;
