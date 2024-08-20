@@ -1,23 +1,32 @@
+
+// Reportes.js
 import React from 'react';
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
 
-const Reportes = ({ inventario }) => {
-  const exportToExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(inventario);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Inventario');
+const Reportes = ({ informes }) => {
+  const descargarReporte = (informe) => {
+    const contenido = informe.items.map(item => 
+      `${item.referencia},${item.nombre},${item.precio},${item.cantidad}\n`
+    ).join('');
 
-    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    const data = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    saveAs(data, 'inventario.xlsx');
+    const blob = new Blob([contenido], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `informe-${informe.fechaHora.replace(/[/\s:]/g, '-')}.csv`; // Nombre basado en la fecha y hora
+    a.click();
   };
 
   return (
     <div>
-      <h2>Historial de Inventarios</h2>
-      <button onClick={exportToExcel}>Descargar Inventario en Excel</button>
-      {/* Aquí puedes agregar el código existente para mostrar el historial de inventarios */}
+      <h2>Informes</h2>
+      <ul>
+        {informes.map((informe, index) => (
+          <li key={index}>
+            <p>Informe realizado el: {informe.fechaHora}</p>
+            <button onClick={() => descargarReporte(informe)}>Descargar</button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

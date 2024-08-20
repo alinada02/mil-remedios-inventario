@@ -1,0 +1,82 @@
+/* Estilos para el contenedor del inventario */
+.inventario-container {
+  padding: 20px;
+  background-color: #ffffff; /* Blanco para el fondo */
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+}
+
+/* Estilos para el formulario del inventario */
+.inventario-form {
+  margin-bottom: 20px;
+}
+
+/* Estilos para los grupos de inputs */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+/* Estilos para los inputs */
+.input-group input {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%; /* Asegura que el input ocupe todo el ancho del contenedor */
+}
+
+/* Estilos para los botones dentro del grupo de inputs */
+.input-group button {
+  background-color: #4CAF50; /* Color verde claro */
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Estilos para los botones al pasar el ratón */
+.input-group button:hover {
+  background-color: #45a049; /* Verde más oscuro al pasar el ratón */
+}
+
+/* Estilos para la lista de productos */
+.productos-list {
+  margin-top: 20px;
+}
+
+/* Estilos para los elementos de la lista de productos */
+.productos-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Estilos para cada ítem de la lista */
+.productos-list li {
+  background-color: #ffffff; /* Blanco para el fondo del ítem */
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+/* Estilos generales para los botones */
+.button {
+  background-color: #4CAF50; /* Color verde claro */
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Estilos para los botones al pasar el ratón */
+.button:hover {
+  background-color: #45a049; /* Verde más oscuro al pasar el ratón */
+}

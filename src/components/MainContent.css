@@ -1,0 +1,39 @@
+
+.main-content {
+    margin-left: 250px; /* Ancho del sidebar */
+    padding: 20px;
+    background-color: #ffffff; /* Fondo blanco */
+  }
+  
+  .content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .content-header h1 {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+  }
+  
+  .toggle-button {
+    background-color: #4CAF50; /* Color verde claro */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .toggle-button:hover {
+    background-color: #45a049;
+  }
+  
+  .inventario-section, .informes-section {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+  }
+  

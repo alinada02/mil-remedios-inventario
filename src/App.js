@@ -10,9 +10,12 @@ const App = () => {
   const [usuario, setUsuario] = useState('');
   const [informes, setInformes] = useState([]); // Estado para guardar los informes de inventarios
 
-  const manejarFinalizarInventario = (items) => {
-    setInformes([...informes, { id: Date.now(), items }]);
-  };
+const manejarFinalizarInventario = (items, fechaHora) => {
+  setInformes([...informes, { fechaHora, items }]);
+};
+//  const manejarFinalizarInventario = (items) => {
+  //  setInformes([...informes, { id: Date.now(), items }]);
+ // };
 
   return (
     <Router>
