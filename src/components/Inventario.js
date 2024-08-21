@@ -1,6 +1,6 @@
-// Inventario.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Inventario.css';
+import Quagga from 'quagga';
 
 const Inventario = ({ onFinalizarInventario }) => {
   const [referencia, setReferencia] = useState('');
@@ -8,6 +8,56 @@ const Inventario = ({ onFinalizarInventario }) => {
   const [precio, setPrecio] = useState('');
   const [cantidad, setCantidad] = useState('');
   const [productos, setProductos] = useState([]);
+  const [escaneoActivo, setEscaneoActivo] = useState(false);
+
+  useEffect(() => {
+    if (escaneoActivo) {
+      iniciarEscaneo();
+    } else {
+      detenerEscaneo();
+    }
+
+    return () => detenerEscaneo();
+  }, [escaneoActivo]);
+
+  const iniciarEscaneo = () => {
+    if (Quagga) {
+      Quagga.init({
+        inputStream: {
+          name: "Live",
+          type: "LiveStream",
+          target: document.querySelector("#scanner-container"),
+          constraints: {
+            facingMode: "environment",
+          },
+        },
+        decoder: {
+          readers: ["code_128_reader"]
+        }
+      }, (err) => {
+        if (err) {
+          console.error("Error al inicializar Quagga:", err);
+          return;
+        }
+        Quagga.start();
+      });
+
+      Quagga.onDetected((data) => {
+        setReferencia(data.codeResult.code);
+        setEscaneoActivo(false); // Detener el escaneo después de leer un código
+      });
+    } else {
+      console.error("Quagga no está definido.");
+    }
+  };
+
+  const detenerEscaneo = () => {
+    if (Quagga && Quagga.initialized) {
+      Quagga.stop();
+    } else {
+      console.error("Quagga no está definido o no ha sido inicializado.");
+    }
+  };
 
   const agregarProducto = () => {
     if (nombre && precio && cantidad) {
@@ -77,9 +127,19 @@ const Inventario = ({ onFinalizarInventario }) => {
       </div>
 
       <button className="button" onClick={finalizarInventario}>Finalizar Inventario</button>
+
+      {/* Contenedor para el escáner */}
+      {escaneoActivo && (
+        <div id="scanner-container" className="scanner-container">
+          {/* La cámara y el flujo de video se mostrarán aquí */}
+        </div>
+      )}
+
+      <button className="button" onClick={() => setEscaneoActivo(!escaneoActivo)}>
+        {escaneoActivo ? 'Detener Escaneo' : 'Iniciar Escaneo'}
+      </button>
     </div>
   );
 };
 
 export default Inventario;
-
